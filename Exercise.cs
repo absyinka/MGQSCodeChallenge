@@ -16,7 +16,27 @@ namespace BasicApp
         public decimal Deduction { get; set; }
         const int MAXIMUMHOURSWORKED = 8;
 
-        public decimal TaxCalculation(decimal monthlyGrossPay)
+        
+        public string PaymentCalculations()
+        {
+            Console.Write("Enter number of days worked: ");
+            NoOfDaysWorked = int.Parse(Console.ReadLine());
+            var hoursWorked = GetTotalNumberOfHoursWorked(NoOfDaysWorked);
+            HoursWorked = hoursWorked.Item1;
+            OvertimeHours = hoursWorked.Item2;
+
+            MonthlyGrossPay = (NormalHourlyRate * HoursWorked) + (OvertimeHourlyRate * OvertimeHours);
+
+            WeeklyGrossPay = MonthlyGrossPay / 4;
+
+            MonthlyNetPay = MonthlyGrossPay - TaxCalculation(MonthlyGrossPay);
+
+            Deduction = TaxCalculation(MonthlyGrossPay);
+
+            return $"Normal Hours worked: {"hour".ToQuantity(HoursWorked)}\nOvertime Hours worked: {"hour".ToQuantity(OvertimeHours)}\nMonthly Gross: ${MonthlyGrossPay}\nTotal Deduction: ${Deduction}\nNet Payment: ${MonthlyNetPay}\nWeekly Gross: ${WeeklyGrossPay}"; 
+        }
+
+        private decimal TaxCalculation(decimal monthlyGrossPay)
         {
             decimal taxRate = 0.00m;
 
@@ -36,24 +56,7 @@ namespace BasicApp
             return taxRate;
         }
 
-        public string PaymentCalculations()
-        {
-            var hoursWorked = GetTotalNumberOfHoursWorked(NoOfDaysWorked);
-            HoursWorked = hoursWorked.Item1;
-            OvertimeHours = hoursWorked.Item2;
-
-            MonthlyGrossPay = (NormalHourlyRate * HoursWorked) + (OvertimeHourlyRate * OvertimeHours);
-
-            WeeklyGrossPay = MonthlyGrossPay / 4;
-
-            MonthlyNetPay = MonthlyGrossPay - TaxCalculation(MonthlyGrossPay);
-
-            Deduction = TaxCalculation(MonthlyGrossPay);
-
-            return $"Normal Hours worked: {"hour".ToQuantity(HoursWorked)}\nOvertime Hours worked: {"hour".ToQuantity(OvertimeHours)}\nMonthly Gross: ${MonthlyGrossPay}\nTotal Deduction: ${Deduction}\nNet Payment: ${MonthlyNetPay}\nWeekly Gross: ${WeeklyGrossPay}"; 
-        }
-
-        public Tuple<int, int> GetTotalNumberOfHoursWorked(int noOfDaysWorked)
+        private Tuple<int, int> GetTotalNumberOfHoursWorked(int noOfDaysWorked)
         {
             int sumOfNormalHoursWorked = 0;
             int sumOfOvertimeWorked = 0;

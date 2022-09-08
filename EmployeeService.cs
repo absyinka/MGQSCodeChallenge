@@ -19,10 +19,11 @@ namespace BasicApp
                 FirstName = employeeDto.FirstName,
                 LastName = employeeDto.LastName,
                 MiddleName = employeeDto.MiddleName,
+                Gender = employeeDto.Gender,
                 DateJoined = dateJoined
             };
 
-            var findEmployee = employees.Find(x => x.Id == employee.Id);
+            var findEmployee = FindByIdOrCode(id, code);
 
             if(findEmployee == null)
             {
@@ -47,6 +48,16 @@ namespace BasicApp
             }
         }
 
+        public Employee FindByCode(string code)
+        {
+            return employees.Find(i => i.EmployeeCode == code);
+        }
+
+        public Employee FindById(int id)
+        {
+            return employees.Find(i => i.Id == id);
+        }
+
         public Employee FindByIdOrCode(int id, string code)
         {
             return employees.Find(i => i.Id == id || i.EmployeeCode == code);
@@ -58,7 +69,7 @@ namespace BasicApp
             {
                 foreach(var emp in employees)
                 {
-                    Console.WriteLine($"Id: {emp.Id}\tCode: {emp.EmployeeCode}\tFirstname: {emp.FirstName}\tLastname: {emp.LastName}\tMiddlename: {emp.MiddleName}\tDateJoined: {emp.DateJoined}");
+                    Console.WriteLine($"Id: {emp.Id}\tCode: {emp.EmployeeCode}\tFirstname: {emp.FirstName}\tLastname: {emp.LastName}\tMiddlename: {emp.MiddleName}\tGender: {emp.Gender}\tDateJoined: {emp.DateJoined}");
                 }
             }
             else 
@@ -67,22 +78,22 @@ namespace BasicApp
             }
         }
 
-        public Employee UpdateEmployee(int id, Employee model)
+        public Employee UpdateEmployee(int id, EmployeeDto model)
         {
-            var employee = employees.Find(i => i.Id == id);
+            var employee = FindById(id);
 
             if (employee != null)
             {
                 employee.FirstName = model.FirstName;
                 employee.LastName = model.LastName;
-                employee.DateJoined = model.DateJoined;
                 employee.MiddleName = model.MiddleName;
+                employee.Gender = model.Gender;
 
-                Console.WriteLine($"Employee successfully Updated.");
+                Console.WriteLine($"Employee record successfully updated!");
             }
             else
             {
-                Console.WriteLine("NOT FOUND");
+                Console.WriteLine("Record not found");
             }
 
             return employee;
@@ -90,7 +101,7 @@ namespace BasicApp
 
         public Employee ViewEmployee(int id)
         {
-            var employee = employees.Find(i => i.Id == id);
+            var employee = FindById(id);
 
             return employee;
         }
