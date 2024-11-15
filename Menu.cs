@@ -1,82 +1,47 @@
 using System;
+using BasicApp.CalculatorConsole;
+using BasicApp.EmployeeConsole;
+using BasicApp.Enums;
+using BasicApp.Shared;
 
-namespace BasicApp
+namespace BasicApp;
+
+public class Menu
 {
-    public class Menu
+    private readonly EmployeeConsoleMenu employeeConsoleMenu = new();
+    private readonly CalculatorMenu calculatorMenu = new();
+
+    public void MainMenu()
     {
-        private readonly IEmployeeService employeeService = new EmployeeService();
-        private readonly EmployeeDto employeeDto = new EmployeeDto();
-        private readonly Exercise exercise = new Exercise();
+        var flag = true;
 
-        public void MainMenu()
+        while (flag)
         {
-            var flag = true;
+            PrintMenu();
+            Console.Write("\nPlease enter your option: ");
+            string option = Console.ReadLine();
 
-            while (flag)
+            switch (option)
             {
-                PrintMenu();
-                Console.Write("\nPlease enter your option: ");
-                string option = Console.ReadLine();
-
-                switch (option)
-                {
-                    case "1":
-                        Console.Write("Enter Firstname: ");
-                        employeeDto.FirstName = Console.ReadLine();
-                        Console.Write("Enter Lastname: ");
-                        employeeDto.LastName = Console.ReadLine();
-                        Console.Write("Enter Middlename: ");
-                        employeeDto.MiddleName = Console.ReadLine();
-                        int gender = Helper.SelectEnum("Enter employee gender:\nEnter 1 for Male\nEnter 2 for Female\nEnter 3 for RatherNotSay: ", 1, 3);
-                        employeeDto.Gender = (Gender) gender;
-                        var employee = employeeService.CreateEmployee(employeeDto);
-                        if (employee != null)
-                        {
-                            Console.WriteLine($"New employee with code \"{employee.EmployeeCode}\" created successfully!");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Employee with {employee.Id} id or {employee.EmployeeCode} already exist!");
-                        }
-                        break;
-                    case "2":
-                        employeeService.ListAllEmployee();
-                        break;
-                    case "4":
-                        Console.Write("Enter ID of employee to update: ");
-                        int empId = int.Parse(Console.ReadLine());
-                        Console.Write("Enter Firstname: ");
-                        employeeDto.FirstName = Console.ReadLine();
-                        Console.Write("Enter Lastname: ");
-                        employeeDto.LastName = Console.ReadLine();
-                        Console.Write("Enter Middlename: ");
-                        employeeDto.MiddleName = Console.ReadLine();
-                        int genderUpdate = Helper.SelectEnum("Enter employee gender:\nEnter 1 for Male\nEnter 2 for Female\nEnter 3 for RatherNotSay: ", 1, 3);
-                        employeeDto.Gender = (Gender) genderUpdate;
-                        employeeService.UpdateEmployee(empId, employeeDto);
-                        break;
-                    case "6":
-                        var result = exercise.PaymentCalculations();
-                        Console.WriteLine(result);
-                        break;
-                    case "0":
-                        flag = false;
-                        break;
-                    default:
-                        throw new InvalidOperationException("Unknown operation!");
-                }
+                case "1":
+                    employeeConsoleMenu.EmployeeMainMenu();
+                    break;
+                case "2":
+                    calculatorMenu.CalculatorMainMenu();
+                    break;
+                case "0":
+                    flag = false;
+                    break;
+                default:
+                    throw new InvalidOperationException("Unknown operation!");
             }
         }
+    }
 
-        public void PrintMenu()
-        {
-            Console.WriteLine("Enter 1 to Add new Employee");
-            Console.WriteLine("Enter 2 to View all Employees");
-            Console.WriteLine("Enter 3 to View an Employee");
-            Console.WriteLine("Enter 4 to Update an Employee");
-            Console.WriteLine("Enter 5 to Delete an Employee");
-            Console.WriteLine("Enter 6 for Payment Calculations");
-            Console.WriteLine("Enter 0 to Exit");
-        }
+    public void PrintMenu()
+    {
+        Console.WriteLine("Enter 1 to Access Employee Console App");
+        Console.WriteLine("Enter 2 to Access Calculators");
+        Console.WriteLine("Enter 0 to Exit");
     }
 }
